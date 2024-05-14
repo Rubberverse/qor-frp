@@ -6,8 +6,9 @@ WORKDIR /app
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
     ALPINE_REPO_VERSION=v3.19 \
-    CONT_USER=frp_uclient \
     CONT_UID=1001
+
+ENV CONT_USER=frp_uclient
 
 ARG TARGETARCH
 
