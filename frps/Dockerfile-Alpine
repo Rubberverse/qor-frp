@@ -15,7 +15,7 @@ ARG TARGETARCH
 LABEL stage=qor-frps
 
 COPY --from=qor-gosu --chmod=0755 /app/go/bin/gosu-${TARGETARCH} /app/bin/gosu
-COPY --from=qor-frp --chmod=0755 /app/go/bin/frpc-${TARGETARCH} /app/bin/frps
+COPY --from=qor-frp --chmod=0755 /app/go/bin/frps-${TARGETARCH} /app/bin/frps
 
 COPY --chmod=755 ../scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
