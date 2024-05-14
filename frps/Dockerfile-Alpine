@@ -5,10 +5,10 @@ FROM --platform=${TARGETPLATFORM} docker.io/library/alpine:edge AS qor-caddy
 WORKDIR /app
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
-    ALPINE_REPO_VERSION=v3.19 \
-    CONT_UID=1001
+    ALPINE_REPO_VERSION=v3.19
 
-ENV CONT_USER=frp_userver
+ENV CONT_USER=frp_userver \
+    CONT_UID=1001
 
 ARG TARGETARCH
 
