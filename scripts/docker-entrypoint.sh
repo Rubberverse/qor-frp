@@ -30,16 +30,19 @@ else
     exit 1
 fi
 
+command -v /app/bin/frps >/dev/null 2>&1 || { echo >&2 "frps not found"; export FRP_CLIENT=1; }
+command -v /app/bin/frpc >/dev/null 2>&1 || { echo >&2 "frpc not found"; export FRP_SERVER=1; }
+
 printf "%b" "$darkorange" " ______        _     _                                             \n(_____ \      | |   | |                                            \n _____) )_   _| |__ | |__  _____  ____ _   _ _____  ____ ___ _____ \n|  __  /| | | |  _ \|  _ \| ___ |/ ___) | | | ___ |/ ___)___) ___ |\n| |  \ \| |_| | |_) ) |_) ) ____| |    \ V /| ____| |  |___ | ____|\n|_|   |_|____/|____/|____/|_____)_|     \_/ |_____)_|  (___/|_____)\n" "$cend";
 printf "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n"
 printf "%b" "🗒️ " "$blue" "Setup Guide " "$cend" "- https://github.com/rubberverse/qor-frp/Setup.md \n"
 printf "%b" "📁 " "$green" "GitHub Repository " "$cend" "- https://github.com/rubberverse/qor-frp \n"
 printf "%b" "🦆 Hey there, thank you for using my images! In case you run into issues please report them on our GitHub repository\n"
 
-if [ "$FRP_CLIENT" = "True" ] && [ -f /app/bin/frpc ]; then
-    printf "%b" "[✨" " $green" "entrypoint" "$cend" "] Starting frp server\n"
-    exec /app/bin/frps -c "$CONFIG_PATH" "$EXTRA_ARGUMENTS"
-elif [ "$FRP_SERVER" = "True" ] && [ -f /app/bin/frps ]; then
+if [ "$FRP_CLIENT" = 1 ]; then
     printf "%b" "[✨" " $green" "entrypoint" "$cend" "] Starting frp client\n"
     exec /app/bin/frpc -c "$CONFIG_PATH" "$EXTRA_ARGUMENTS"
+elif [ "$FRP_SERVER" = 1 ]; then
+    printf "%b" "[✨" " $green" "entrypoint" "$cend" "] Starting frp server\n"
+    exec /app/bin/frps -c "$CONFIG_PATH" "$EXTRA_ARGUMENTS"
 fi

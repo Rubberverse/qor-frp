@@ -14,8 +14,6 @@ ARG TARGETARCH
 
 LABEL stage=qor-frps
 
-ENV FRP_SERVER="True"
-
 COPY --from=qor-gosu --chmod=0755 /app/go/bin/gosu-${TARGETARCH} /app/bin/gosu
 COPY --from=qor-frp --chmod=0755 /app/go/bin/frpc-${TARGETARCH} /app/bin/frps
 
