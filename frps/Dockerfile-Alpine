@@ -1,0 +1,36 @@
+FROM --platform=${TARGETPLATFORM} ghcr.io/rubberverse/qor-gosu/gosu-binary:latest-alpine AS qor-gosu
+FROM --platform=${TARGETPLATFORM} ghcr.io/rubberverse/qor-frp-binary:latest AS qor-frp
+
+FROM --platform=${TARGETPLATFORM} docker.io/library/alpine:edge AS qor-caddy
+WORKDIR /app
+
+ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
+    ALPINE_REPO_VERSION=v3.19 \
+    CONT_USER=frp_userver \
+    CONT_UID=1001
+
+ARG TARGETARCH
+
+LABEL stage=qor-frps
+
+ENV FRP_SERVER="True"
+
+COPY --from=qor-gosu --chmod=0755 /app/go/bin/gosu-${TARGETARCH} /app/bin/gosu
+COPY --from=qor-frp --chmod=0755 /app/go/bin/frpc-${TARGETARCH} /app/bin/frps
+
+COPY --chmod=755 ../scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
+
+RUN apk upgrade --no-cache \
+    && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
+        ca-certificates \
+        openssl \
+    && adduser \
+        --home "/app" \
+        --shell "/bin/sh" \
+        --uid "$CONT_UID"  \
+        --disabled-password \
+        --no-create-home \
+        "$CONT_USER" \
+    && mkdir -p /app/certs
+
+ENTRYPOINT /app/scripts/docker-entrypoint.sh

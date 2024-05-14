@@ -1,0 +1,111 @@
+name: Use cross-compilation to quickly create cross-arch binaries
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+    paths-ignore:
+      - '**.md'
+      - '.github/workflows/**.yaml'
+  workflow_dispatch:
+
+jobs:
+    build-frp-helper:
+        name: Build and push to ghcr
+        runs-on: ubuntu-latest
+        environment: production
+        defaults:
+            run:
+                working-directory: .
+                shell: bash
+
+        steps:
+          - name: Free up worker space
+            run: sudo rm -rf "$AGENT_TOOLSDIRECTORY"; sudo rm -rf /usr/share/dotnet /usr/local/lib/android; sudo apt-get update; sudo apt-get remove -y '^dotnet-.*'; sudo apt-get autoremove -y; sudo apt-get clean
+
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+                fetch-depth: '0'
+
+          - uses: docker/setup-buildx-action@v3
+            name: Customize Docker driver
+            with:
+                driver-opts: image=moby/buildkit:master
+
+          - uses: mr-smithers-excellent/docker-build-push@v6
+            name: Build the helper image using golang cross-compilation
+            with:
+                image: qor-frp-binary
+                tags: latest
+                buildArgs: BUILDPLATFORM=linux/amd64
+                dockerfile: builder/Dockerfile-Builder
+                registry: ghcr.io
+                multiPlatform: true
+                overrideDriver: true
+                enableBuildKit: true
+                platform: linux/amd64,linux/i386,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/mips64le,linux/s390x
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: Cancel on failure
+            uses: andymckay/cancel-action@0.4
+            if: failure()
+
+    publish-to-ghcr:
+      name: Publish multi-arch image to ghcr.io
+      runs-on: ubuntu-latest
+      if: ${{ always() && (needs.build-frp-helper.result == 'success') }}
+      needs: [build-frp-helper]
+      environment: production
+
+      defaults:
+        run:
+          working-directory: .
+          shell: bash
+
+      steps:
+        - name: Free up worker space
+          run: sudo rm -rf "$AGENT_TOOLSDIRECTORY"; sudo rm -rf /usr/share/dotnet /usr/local/lib/android; sudo apt-get update; sudo apt-get remove -y '^dotnet-.*'; sudo apt-get autoremove -y; sudo apt-get clean
+        
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: '0'
+
+        - uses: docker/setup-buildx-action@v3
+          name: Customize Docker driver
+          with:
+            driver-opts: image=moby/buildkit:master
+
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v3
+
+        - uses: mr-smithers-excellent/docker-build-push@v6
+          name: Build and push Alpine variant of the image to GitHub Container Registry
+          with:
+            image: qor-frpc
+            dockerfile: frpc/Dockerfile-Alpine
+            registry: ghcr.io
+            multiPlatform: true
+            overrideDriver: true
+            enableBuildKit: true
+            tags: frpc-v0.58.0, frpc-alpine
+            platform: linux/amd64,linux/i386,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - uses: mr-smithers-excellent/docker-build-push@v6
+          name: Build and push Alpine variant of the image to GitHub Container Registry
+          with:
+            image: qor-frps
+            dockerfile: frps/Dockerfile-Alpine
+            registry: ghcr.io
+            multiPlatform: true
+            overrideDriver: true
+            enableBuildKit: true
+            tags: frps-v0.58.0, frps-alpine
+            platform: linux/amd64,linux/i386,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
