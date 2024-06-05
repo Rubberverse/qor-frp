@@ -12,7 +12,7 @@ Binaries themselves are built against [fatedier/frp](https://github.com/fatedier
 |----------|--------|-------------|---------------|
 | qor-frpc | frpc-alpine, frps-version | Alpine Linux image used as a base | x86_64, x86, ARM64 |
 | qor-frps | frps-alpine, frps-version | Alpine Linux image used as a base | x86_64, x86, ARM64 |
-| qor-frp-binary | latest | Stores all binaries created during cross-compilation phase | x86_64, x86, ARM64, ARMv7, ARMv6, ARMv5, PPC64LE, MIPS64LE, RISCV64, S390X |
+| qor-frp-binary | latest | Stores all binaries created during cross-compilation phase | x86_64, x86, ARM64, ARMv7, ARMv6, ARMv5, ppc64le, mips64le, riscv64, s390x |
 
 ❔ Only ARM and AMD64, i386 images are available, if you want to try out the other architectures then use COPY on a blank base with the binary, example Dockerfile can be found below
 
