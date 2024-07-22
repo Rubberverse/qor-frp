@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ghcr.io/rubberverse/qor-gosu/gosu-binary:latest-alpine AS qor-gosu
+FROM --platform=${TARGETPLATFORM} docker.io/mrrubberducky/qor-gosu:latest-alpine AS qor-gosu
 FROM --platform=${TARGETPLATFORM} ghcr.io/rubberverse/qor-frp-binary:latest AS qor-frp
 
 FROM --platform=${TARGETPLATFORM} docker.io/library/alpine:edge AS qor-frpc
