@@ -23,6 +23,7 @@ RUN apk upgrade --no-cache \
     && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
         ca-certificates \
         openssl \
+    && update-ca-certificates \
     && adduser \
         --home "/app" \
         --shell "/bin/sh" \
