@@ -19,6 +19,9 @@ RUN apk upgrade --no-cache \
         bash \
         curl \
         file \
+    && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
+        ca-certificates \
+        openssl \
     && export GO_VERSION=$(curl https://go.dev/dl/?mode=json | jq -r '.[0].version' ) \
     && curl -LO go.dev/dl/"${GO_VERSION}".linux-amd64.tar.gz \
     && tar -C /usr/local -xzf "${GO_VERSION}".linux-amd64.tar.gz \
