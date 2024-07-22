@@ -40,7 +40,7 @@ jobs:
             with:
                 image: qor-frp-binary
                 tags: latest
-                buildArgs: BUILDPLATFORM=linux/amd64,GIT_BRANCH=v0.58.1,ALPINE_REPO_VERSION=edge
+                buildArgs: BUILDPLATFORM=linux/amd64,GIT_BRANCH=v0.59.0,ALPINE_REPO_VERSION=edge
                 dockerfile: builder/Dockerfile-Builder
                 registry: ghcr.io
                 multiPlatform: true
@@ -91,7 +91,7 @@ jobs:
             multiPlatform: true
             overrideDriver: true
             enableBuildKit: true
-            tags: frpc-v0.58.1, frpc-alpine
+            tags: frpc-v0.59.0, frpc-alpine
             platform: linux/amd64,linux/i386,linux/arm64
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
@@ -105,7 +105,7 @@ jobs:
             multiPlatform: true
             overrideDriver: true
             enableBuildKit: true
-            tags: frps-v0.58.1, frps-alpine
+            tags: frps-v0.59.0, frps-alpine
             platform: linux/amd64,linux/i386,linux/arm64
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
