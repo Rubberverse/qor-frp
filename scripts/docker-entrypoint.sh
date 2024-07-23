@@ -14,7 +14,10 @@ if [ "$(whoami)" = "root" ]; then
     chown -R "$CONT_UID":"$CONT_UID" /app
     ls -ld /app
     ls -ld /app/bin
-    printf "%b" "[entrypoint] Updating CA Certificates\n"
+    printf "%b" "[entrypoint] Copying ca.pem\n"
+    cp /app/certs/cert.pem /usr/local/share/ca-certificates/my-cert.crt
+    cat /usr/local/share/ca-certificates/my-cert.crt >> /etc/ssl/certs/ca-certificates.crt
+    printf "%b" "[entrypoint] Trusting it (maybe)\n"
     update-ca-certificates
 
     printf "%b" "[entrypoint] Forking off to rootless user using tianon/gosu (docker.io/mrrubberducky/qor-gosu)\n"
