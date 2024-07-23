@@ -14,6 +14,8 @@ if [ "$(whoami)" = "root" ]; then
     chown -R "$CONT_UID":"$CONT_UID" /app
     ls -ld /app
     ls -ld /app/bin
+    printf "%b" "[entrypoint] Updating CA Certificates\n"
+    update-ca-certificates
 
     printf "%b" "[entrypoint] Forking off to rootless user using tianon/gosu (docker.io/mrrubberducky/qor-gosu)\n"
     exec /app/bin/gosu "$CONT_USER" /app/scripts/docker-entrypoint.sh
