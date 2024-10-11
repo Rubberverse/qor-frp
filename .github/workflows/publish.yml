@@ -1,4 +1,4 @@
-name: Use cross-compilation to quickly create cross-arch binaries
+name: Build the image using cc
 
 on:
   push:
@@ -12,100 +12,51 @@ on:
   workflow_dispatch:
 
 jobs:
-    build-frp-helper:
-        name: Build and push to ghcr
-        runs-on: ubuntu-latest
-        environment: production
-        defaults:
-            run:
-                working-directory: .
-                shell: bash
-
-        steps:
-          - name: Free up worker space
-            run: sudo rm -rf "$AGENT_TOOLSDIRECTORY"; sudo rm -rf /usr/share/dotnet /usr/local/lib/android; sudo apt-get update; sudo apt-get remove -y '^dotnet-.*'; sudo apt-get autoremove -y; sudo apt-get clean
-
-          - name: Checkout
-            uses: actions/checkout@v3
-            with:
-                fetch-depth: '0'
-
-          - uses: docker/setup-buildx-action@v3
-            name: Customize Docker driver
-            with:
-                driver-opts: image=moby/buildkit:master
-
-          - uses: mr-smithers-excellent/docker-build-push@v6
-            name: Build the helper image using golang cross-compilation
-            with:
-                image: qor-frp-binary
-                tags: latest
-                buildArgs: BUILDPLATFORM=linux/amd64,GIT_BRANCH=v0.59.0,ALPINE_REPO_VERSION=edge
-                dockerfile: builder/Dockerfile-Builder
-                registry: ghcr.io
-                multiPlatform: true
-                overrideDriver: true
-                enableBuildKit: true
-                platform: linux/amd64,linux/i386,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/mips64le,linux/s390x
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-
-          - name: Cancel on failure
-            uses: andymckay/cancel-action@0.4
-            if: failure()
-
-    publish-to-ghcr:
-      name: Publish multi-arch image to ghcr.io
-      runs-on: ubuntu-latest
-      if: ${{ always() && (needs.build-frp-helper.result == 'success') }}
-      needs: [build-frp-helper]
-      environment: production
-
-      defaults:
-        run:
-          working-directory: .
-          shell: bash
-
-      steps:
-        - name: Free up worker space
-          run: sudo rm -rf "$AGENT_TOOLSDIRECTORY"; sudo rm -rf /usr/share/dotnet /usr/local/lib/android; sudo apt-get update; sudo apt-get remove -y '^dotnet-.*'; sudo apt-get autoremove -y; sudo apt-get clean
-        
-        - uses: actions/checkout@v3
-          with:
-            fetch-depth: '0'
-
-        - uses: docker/setup-buildx-action@v3
-          name: Customize Docker driver
-          with:
-            driver-opts: image=moby/buildkit:master
-
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3
-
-        - uses: mr-smithers-excellent/docker-build-push@v6
-          name: Build and push Alpine variant of the image to GitHub Container Registry
-          with:
-            image: qor-frpc
-            dockerfile: frpc/Dockerfile-Alpine
-            registry: ghcr.io
-            multiPlatform: true
-            overrideDriver: true
-            enableBuildKit: true
-            tags: frpc-v0.59.0, frpc-alpine
-            platform: linux/amd64,linux/i386,linux/arm64
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-
-        - uses: mr-smithers-excellent/docker-build-push@v6
-          name: Build and push Alpine variant of the image to GitHub Container Registry
-          with:
-            image: qor-frps
-            dockerfile: frps/Dockerfile-Alpine
-            registry: ghcr.io
-            multiPlatform: true
-            overrideDriver: true
-            enableBuildKit: true
-            tags: frps-v0.59.0, frps-alpine
-            platform: linux/amd64,linux/i386,linux/arm64
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    name: Build and push to ghcr
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: .
+        shell: bash
+    steps:
+      - name: Free up worker space
+        run: sudo rm -rf "$AGENT_TOOLSDIRECTORY"; sudo rm -rf /usr/share/dotnet /usr/local/lib/android; sudo apt-get update; sudo apt-get remove -y '^dotnet-.*'; sudo apt-get autoremove -y; sudo apt-get clean
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: QEMU
+        uses: docker/setup-qemu-action@v3.2.0
+        with:
+          platforms: arm64
+      - name: Build & Push Alpine frps Image to DH
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: mrrubberducky/qor-frp
+          registry: docker.io
+          dockerfile: qor-frp-CC/alpine/Dockerfile
+          buildArgs: BUILDPLATFORM=linux/amd64,CLIENT_VARIANT=frps,GIT_BRANCH=v0.60.0
+          multiPlatform: true
+          enableBuildKit: true
+          tags: frps-v0.60.0, latest-frps
+          platform: linux/amd64
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build & Push Alpine frpc Image to DH
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: mrrubberducky/qor-frp
+          registry: docker.io
+          dockerfile: qor-frp-CC/alpine/Dockerfile
+          buildArgs: BUILDPLATFORM=linux/amd64,CLIENT_VARIANT=frpc,GIT_BRANCH=v0.60.0
+          multiPlatform: true
+          enableBuildKit: true
+          tags: frpc-v0.60.0, latest-frpc
+          platform: linux/amd64
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Cancel on failure
+        uses: andymckay/cancel-action@0.4
+        if: failure()

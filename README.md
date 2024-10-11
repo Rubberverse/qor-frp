@@ -1,37 +1,64 @@
 ## Rubberverse Container Images
 
-![frp version](https://img.shields.io/badge/frp_version-v0.58.1-darkblue)
+![frp version](https://img.shields.io/badge/frp_version-v0.60.0-darkblue)
 
-This repository contains ready-to-use container images for frp client & server built using [GitHub actions]()
+**Currently supported tags**: `v0.60.0-frpc`, `v0.60.0-frps`, `latest-frpc` and `latest-frps`.
 
-Binaries themselves are built against [fatedier/frp](https://github.com/fatedier/frp) latest stable release tag using `go build` and it makes use of [tianon/gosu](https://github.com/tianon/gosu), specifically [Rubberverse/qor-gosu](https://github.com/Rubberverse/qor-gosu) build of it.
+**Update Policy**: On every new frp relese. Not building against `master` branch. Rolling release, only latest versions will be supported.
+
+**Security Policy**: Everytime there's a fixed CVE on the horizon.
+
+This repository contains ready-to-use container images for frp client & server built using [GitHub actions](https://github.com/Rubberverse/qor-frp/blob/main/.github/workflows/publish.yml)
+
+We are making use of our own built tianon/gosu binary which can be found in following [GitHub repository](https://github.com/Rubberverse/qor-gosu), which is just built against latest Go version.
+
+[alpine/Dockerfile]() | [scripts/docker-entrypoint.sh]()
+
+---
 
 ## Tag information
 
 | Image(s) | Tag(s) | Description | Architectures |
 |----------|--------|-------------|---------------|
-| qor-frpc | frpc-alpine, frps-version | Alpine Linux image used as a base | x86_64, x86, ARM64, ARMv7 |
-| qor-frps | frps-alpine, frps-version | Alpine Linux image used as a base | x86_64, x86, ARM64, ARMv7 |
-| qor-frp-binary | latest | Stores all binaries created during cross-compilation phase | x86_64, x86, ARM64, ARMv7 |
+| qor-frp | latest-frpc, frpc-`VERSION` | Alpine Linux image used as a base | x86_64 |
+| qor-frp | latest-frps, frps-`VERSION` | Alpine Linux image used as a base | x86_64 |
 
-❔ Only ARM and AMD64, i386 images are available, if you want to try out the other architectures then use COPY on a blank base with the binary, example Dockerfile can be found below
+---
 
-```Dockerfile
-FROM ghcr.io/rubberverse/qor-frp-binary:latest AS qor-frp-binary
+## Image versionning
 
-FROM docker.io/library/alpine:v3.20 AS qor-frp
-WORKDIR /app
-
-COPY --from=qor-frp-binary /app/bin/frpc-"${TARGETARCH}" /app/bin/frpc
-# or
-COPY --from=qor-frp-binary /app/bin/frps-"${TARGETARCH}" /app/bin/frps
-
-(do rest)
-```
+Image version will always reflect current version of frpc or frps, ex. frpc-v0.51.0
 
 ## Environmental Variables
 
 | Env | Description | Value |
 |-----|-------------|---------|
-| `CONFIG_PATH` | Points to frp where the configuration is located inside of the container, required | `` |
-| `EXTRA_ARGUMENTS` | Allows to specify extra launch parameters to frp server or client | `` |
+| **[REQ]** `CONFIG_PATH` | Points to frp where the configuration is located inside of the container ex. /app/configs/frps.toml | `empty by default` |
+| **[OPT]** `EXTRA_ARGUMENTS` | Allows to specify extra launch parameters to frp server or client | `empty by default` |
+
+## User-owned directiories
+
+These directories will always have their permissions repaired, in order to avoid conflicts with files not being owned by correct user. **You should still ensure that the files are executable beforehand on your host.**
+
+- `/app`
+
+## Self-signed certificate trusting
+
+You can mount your self-signed certificates in `/app/certs`. As long as you have one named `/app/certs/cert.pem`, it will copy it and trust it in the root store for the container.
+
+It should eliminate some problems with Go libraries in itself refusing to trust a self-signed certificate.
+
+## Usage
+
+This container supports no interactive commands. You can however enable frpc or frps API and steer it that way.
+
+1. Mount a frpc or frps configuration file depending on what tag you've choosen to `/app/configs`
+2. Change `CONFIG_PATH` environmental variable so it points to your `frpc.toml` or `frps.toml` - **needs to be full path ex.** `CONFIG_PATH=/app/configs/frps.toml`
+3. Run the image
+4. ???
+5. Profit
+
+## Deployment Methods
+
+// todo
+
