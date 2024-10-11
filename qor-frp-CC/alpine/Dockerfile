@@ -59,7 +59,7 @@ ENV CONT_USER=frp_uclient \
 ARG TARGETARCH
 
 COPY --from=qor-gosu --chmod=0755 /app/gosu /app/bin/gosu
-COPY --from=qor-frp --chmod=0755 /app/go/bin/${CLIENT_VARIANT}-${TARGETARCH} /app/bin/${CLIENT_VARIANT}
+COPY --from=alpine-builder --chmod=0755 /app/go/bin/${CLIENT_VARIANT}-${TARGETARCH} /app/bin/${CLIENT_VARIANT}
 
 COPY --chmod=755 ../scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
