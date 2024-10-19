@@ -31,7 +31,7 @@ jobs:
         uses: docker/setup-qemu-action@v3.2.0
         with:
           platforms: arm64
-      - name: Build & Push Alpine frps Image to DH
+      - name: Build & Push Alpine frps rootless Image to DH
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: mrrubberducky/qor-frp
@@ -44,7 +44,20 @@ jobs:
           platform: linux/amd64
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build & Push Alpine frpc Image to DH
+      - name: Build & Push Alpine frps rootful Image to DH
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: mrrubberducky/qor-frp
+          registry: docker.io
+          dockerfile: qor-frp-CC/alpine/rootful.Dockerfile
+          buildArgs: GOSU=1,CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
+          multiPlatform: true
+          enableBuildKit: true
+          tags: frps-v0.61.0, latest-frps
+          platform: linux/amd64
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build & Push Alpine frpc rootless Image to DH
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: mrrubberducky/qor-frp
@@ -54,6 +67,19 @@ jobs:
           multiPlatform: true
           enableBuildKit: true
           tags: frpc-v0.61.0-unpriv, latest-frpc-unpriv
+          platform: linux/amd64
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build & Push Alpine frpc rootful Image to DH
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: mrrubberducky/qor-frp
+          registry: docker.io
+          dockerfile: qor-frp-CC/alpine/rootful.Dockerfile
+          buildArgs: GOSU=1,CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
+          multiPlatform: true
+          enableBuildKit: true
+          tags: frpc-v0.61.0, latest-frpc
           platform: linux/amd64
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
