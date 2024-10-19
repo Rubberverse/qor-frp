@@ -8,7 +8,7 @@ FROM --platform=$TARGETPLATFORM $IMAGE_REPOSITORY/alpine:$IMAGE_ALPINE_VERSION A
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
     ALPINE_REPO_VERSION=edge \
-    CLIENT_VARIANT=""
+    CLIENT_VARIANT="" \
     FRP_TYPE="" \
     GOSU=""
 
