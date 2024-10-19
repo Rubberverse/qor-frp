@@ -37,7 +37,7 @@ jobs:
           image: mrrubberducky/qor-frp
           registry: docker.io
           dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
-          buildArgs: GOSU=0,CLIENT_VARIANT="frps",FRP_TYPE="SERVER",GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
+          buildArgs: GOSU=0,CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
           multiPlatform: true
           enableBuildKit: true
           tags: frps-v0.61.0-unpriv, latest-frps-unpriv
@@ -50,7 +50,7 @@ jobs:
           image: mrrubberducky/qor-frp
           registry: docker.io
           dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
-          buildArgs: GOSU=0,CLIENT_VARIANT="frpc",FRP_TYPE="CLIENT",GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
+          buildArgs: GOSU=0,CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
           multiPlatform: true
           enableBuildKit: true
           tags: frpc-v0.61.0-unpriv, latest-frpc-unpriv
