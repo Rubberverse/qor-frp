@@ -47,7 +47,7 @@ ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
     GIT_REPOSITORY=https://github.com/fatedier/frp.git \
     GIT_BRANCH="" \
     CGO_ENABLED=0 \
-    GOPATH=/app/go
+    GOPATH=/usr/app/go
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache --virtual build-deps --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
@@ -77,7 +77,7 @@ RUN apk upgrade --no-cache \
     && file /usr/app/go/bin/frpc-"${TARGETARCH}" \
     && apk del --rdepends \
         build-deps \
-    && rm -rf /app/go/cache /tmp /usr/local/go /app/go/frp
+    && rm -rf /app/go/cache /tmp /usr/local/go /usr/app/go/frp
 
 # ==================================================== #
 # Runner
