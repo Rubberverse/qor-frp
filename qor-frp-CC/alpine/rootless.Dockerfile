@@ -8,16 +8,17 @@ FROM --platform=$TARGETPLATFORM $IMAGE_REPOSITORY/alpine:$IMAGE_ALPINE_VERSION A
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
     ALPINE_REPO_VERSION=edge \
-    CLIENT_VARIANT="" \
-    FRP_TYPE="" \
-    GOSU=""
+
+ARG CLIENT_VARIANT
+ARG FRP_TYPE
+ARG GOSU
 
 ENV CONT_UID=1001 \
     CONT_USER=frp_uclient \
+    CLIENT_VARIANT=$CLIENT_VARIANT \
     CONFIG_PATH=/app/configs/${CLIENT_VARIANT}.toml \
     GOSU=$GOSU \
-    FRP_TYPE=$FRP_TYPE \
-    CLIENT_VARIANT=""
+    FRP_TYPE=$FRP_TYPE
 
 COPY --chmod=755 ../scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
@@ -89,15 +90,14 @@ FROM alpine-base AS alpine-runner
 
 WORKDIR /app
 
-ARG CLIENT_VARIANT="" \
-    FRP_TYPE="" \
-    GOSU=""
+ARG CLIENT_VARIANT
+ARG FRP_TYPE
+ARG GOSU
+ARG TARGETARCH
 
 ENV GOSU=$GOSU \
     FRP_TYPE=$FRP_TYPE \
-    CLIENT_VARIANT=""
-
-ARG TARGETARCH
+    CLIENT_VARIANT=$CLIENT_VARIANT
 
 COPY --from=alpine-builder --chmod=0755 /usr/app/go/bin/${CLIENT_VARIANT}-${TARGETARCH} /app/bin/${CLIENT_VARIANT}
 
