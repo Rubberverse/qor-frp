@@ -7,14 +7,18 @@ ARG IMAGE_ALPINE_VERSION=edge
 FROM --platform=$TARGETPLATFORM $IMAGE_REPOSITORY/alpine:$IMAGE_ALPINE_VERSION AS alpine-base
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
-    ALPINE_REPO_VERSION=edge
+    ALPINE_REPO_VERSION=edge \
+
+ARG CLIENT_VARIANT
+ARG FRP_TYPE
+ARG GOSU
 
 ENV CONT_UID=1001 \
     CONT_USER=frp_uclient \
+    CLIENT_VARIANT=$CLIENT_VARIANT \
     CONFIG_PATH=/app/configs/${CLIENT_VARIANT}.toml \
-    GOSU=${ROOTFUL} \
-    FRP_TYPE=${DEPLOY_TYPE} \
-    CLIENT_VARIANT=""
+    GOSU=$GOSU \
+    FRP_TYPE=$FRP_TYPE
 
 COPY --chmod=755 ../scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
@@ -47,7 +51,7 @@ ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
     GIT_REPOSITORY=https://github.com/fatedier/frp.git \
     GIT_BRANCH="" \
     CGO_ENABLED=0 \
-    GOPATH=/usr/app/go
+    GOPATH=/app/go
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache --virtual build-deps --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
@@ -87,8 +91,14 @@ FROM alpine-base AS alpine-runner
 
 WORKDIR /app
 
-ARG TARGETARCH
 ARG CLIENT_VARIANT
+ARG FRP_TYPE
+ARG GOSU
+ARG TARGETARCH
+
+ENV GOSU=$GOSU \
+    FRP_TYPE=$FRP_TYPE \
+    CLIENT_VARIANT=$CLIENT_VARIANT
 
 COPY --from=gosu-binary --chmod=0755 /app/gosu /app/bin/gosu
 COPY --from=alpine-builder --chmod=0755 /usr/app/go/bin/${CLIENT_VARIANT}-${TARGETARCH} /app/bin/${CLIENT_VARIANT}
