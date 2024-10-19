@@ -12,9 +12,8 @@ if [ "$(whoami)" = "root" ] && [ "$GOSU" = 1 ]; then
     printf "%b" "[entrypoint] Fixing ownership of (sub-)directories and files regardless of change in ownership\n"
     chown -Rf "$CONT_UID":"$CONT_UID" /app
 
-    CERT_PATH=/usr/local/share/ca-certificates
-    FILE_PATH="$CERT_PATH"/my-cert.crt
-    cp "$CERT_DIR" "$CERT_PATH"
+    FILE_PATH=/usr/local/share/ca-certificates/my-cert.crt
+    cp /app/certs/cert.pem "$FILE_PATH"
     cat "$FILE_PATH" >> /etc/ssl/certs/ca-certificates.crt
     update-ca-certificates
 
@@ -37,7 +36,7 @@ else
     exit 1
 fi
 
-# Binary check if block
+# Binary check if block, probably doesn't work but who cares (well I kinda do but not enough to find out why)
 if [ -z "$FRP_TYPE" ]; then
     printf "%b" "[✨" " $green" "entrypoint" "$cend" "] Checking binary files...\n"
     printf "%b" "[✨ " "$purple" "entrypoint - Info" "$cend" "] Keep in mind that if your binary files are different name, you should point FRP_NAME to a valid name.\n"
