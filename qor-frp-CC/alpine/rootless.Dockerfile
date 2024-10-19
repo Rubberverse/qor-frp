@@ -77,7 +77,7 @@ RUN apk upgrade --no-cache \
     && file /usr/app/go/bin/frpc-"${TARGETARCH}" \
     && apk del --rdepends \
         build-deps \
-    && rm -rf /app/go/cache /tmp /usr/local/go /app/go/frp
+    && rm -rf /app/go/cache /tmp /usr/local/go /usr/app/go/frp
 
 # ==================================================== #
 # Runner
