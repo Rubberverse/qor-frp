@@ -7,7 +7,7 @@ ARG IMAGE_ALPINE_VERSION=edge
 FROM --platform=$TARGETPLATFORM $IMAGE_REPOSITORY/alpine:$IMAGE_ALPINE_VERSION AS alpine-base
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
-    ALPINE_REPO_VERSION=edge \
+    ALPINE_REPO_VERSION=edge
 
 ENV CONT_UID=1001 \
     CONT_USER=frp_uclient \
