@@ -8,9 +8,6 @@ purple='\033[38;5;135m'
 green='\033[38;5;41m'
 blue='\033[38;5;99m'
 
-# Check if gosu binary exists
-command -v /app/bin/gosu >/dev/null 2>&1 || export GOSU=1
-
 if [ "$(whoami)" = "root" ] && [ "$GOSU" = 1 ]; then 
     printf "%b" "[entrypoint] Fixing ownership of (sub-)directories and files regardless of change in ownership\n"
     chown -Rf "$CONT_UID":"$CONT_UID" /app
@@ -26,8 +23,8 @@ if [ "$(whoami)" = "root" ] && [ "$GOSU" = 1 ]; then
 
 # If user is using gosu variant and changing user account
 elif [ "$(whoami)" != "root" ] && [ "$GOSU" = 1 ]; then
-    printf "%b" "[❌ " "$pink" "entrypoint - Error" "$cend" "] This variant of the image must be run as root user!"
-    printf "%b" "[❌ " "$pink" "entrypoint - Error" "$cend" "] Please use rootless variant instead."
+    printf "%b" "[❌ " "$pink" "entrypoint - Error" "$cend" "] This variant of the image must be run as root user!\n"
+    printf "%b" "[❌ " "$pink" "entrypoint - Error" "$cend" "] Please use rootless variant instead.\n"
     exit 1
 fi
 
