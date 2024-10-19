@@ -89,7 +89,14 @@ FROM alpine-base AS alpine-runner
 
 WORKDIR /app
 
-ARG CLIENT_VARIANT
+ARG CLIENT_VARIANT="" \
+    FRP_TYPE="" \
+    GOSU=""
+
+ENV GOSU=$GOSU \
+    FRP_TYPE=$FRP_TYPE \
+    CLIENT_VARIANT=""
+
 ARG TARGETARCH
 
 COPY --from=alpine-builder --chmod=0755 /usr/app/go/bin/${CLIENT_VARIANT}-${TARGETARCH} /app/bin/${CLIENT_VARIANT}
