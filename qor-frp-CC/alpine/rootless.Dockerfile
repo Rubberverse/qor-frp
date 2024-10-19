@@ -12,7 +12,7 @@ ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
 ENV CONT_UID=1001 \
     CONT_USER=frp_uclient \
     CONFIG_PATH=/app/configs/${CLIENT_VARIANT}.toml \
-    GOSU=${ROOTFUL} \
+    GOSU=0 \
     FRP_TYPE=${DEPLOY_TYPE} \
     CLIENT_VARIANT=""
 
