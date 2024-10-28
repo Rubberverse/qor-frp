@@ -39,4 +39,4 @@ This container supports no interactive commands. You can however enable frpc or 
 1. Mount a configuration file for your frp variant to `/app/configs/`
 2. If you're making use of certificates, mount them using secrets or however you're used to doing. [Example Quadlet Deployment](https://github.com/MrRubberDucky/rubberverse.xyz/blob/main/Quadlet/frpc/QOR-FRPC.container)
 3. Run the image
-4. Profie
+4. Profit
