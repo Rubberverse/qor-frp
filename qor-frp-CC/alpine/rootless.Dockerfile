@@ -17,7 +17,7 @@ ENV CONT_UID=1001 \
     GOSU=$GOSU \
     FRP_TYPE=$FRP_TYPE
 
-COPY --chmod=755 docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
+COPY --chmod=755 ../scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
