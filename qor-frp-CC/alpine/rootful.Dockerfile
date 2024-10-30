@@ -1,9 +1,6 @@
 ARG IMAGE_REPOSITORY=docker.io/library
 ARG IMAGE_ALPINE_VERSION=edge
 
-# ==================================================== #
-# Base image
-# ==================================================== #
 FROM --platform=$TARGETPLATFORM $IMAGE_REPOSITORY/alpine:$IMAGE_ALPINE_VERSION AS alpine-base
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
@@ -20,7 +17,7 @@ ENV CONT_UID=1001 \
     GOSU=$GOSU \
     FRP_TYPE=$FRP_TYPE
 
-COPY --chmod=755 ../scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
+COPY --chmod=755 docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
@@ -36,20 +33,17 @@ RUN apk upgrade --no-cache \
         "$CONT_USER" \
     && mkdir -p /app/certs
 
-# ==================================================== #
-# Builder
-# ==================================================== #
 FROM alpine-base AS alpine-builder
 
-WORKDIR /usr/app
+WORKDIR /usr/app/frp
 
 ARG TARGETOS
 ARG TARGETARCH
+ARG GIT_BRANCH
 
 ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
     ALPINE_REPO_VERSION=edge \
     GIT_REPOSITORY=https://github.com/fatedier/frp.git \
-    GIT_BRANCH="" \
     CGO_ENABLED=0 \
     GOPATH=/app/go
 
@@ -60,32 +54,36 @@ RUN apk upgrade --no-cache \
         tar \
         bash \
         curl \
-        file \
     && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
         ca-certificates \
         openssl \
-    && export GO_VERSION=$(curl https://go.dev/dl/?mode=json | jq -r '.[0].version' ) \
-    && curl -LO go.dev/dl/"${GO_VERSION}".linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf "${GO_VERSION}".linux-amd64.tar.gz \
-    && rm "${GO_VERSION}".linux-amd64.tar.gz \
-    && export PATH="${PATH}":/usr/local/go/bin:/usr/app/go/bin \
-    && mkdir -p "${GOPATH}" \
-    && cd "${GOPATH}" \
-    && git config --global --add safe.directory '*' \
-    && git clone --branch "${GIT_BRANCH}" "${GIT_REPOSITORY}" \
-    && cd frp \
-    && git init \
-    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /usr/app/go/bin/frps-${TARGETARCH} -trimpath -ldflags '-w -s' ./cmd/frps \
-    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /usr/app/go/bin/frpc-${TARGETARCH} -trimpath -ldflags '-w -s' ./cmd/frpc \
-    && file /usr/app/go/bin/frps-"${TARGETARCH}" \
-    && file /usr/app/go/bin/frpc-"${TARGETARCH}" \
+    && export \
+        GO_VERSION=$(curl https://go.dev/dl/?mode=json | jq -r '.[0].version' ) \
+    && curl -Lo golang.tar.gz \
+        go.dev/dl/"${GO_VERSION}".linux-amd64.tar.gz \
+    && tar -C /usr/local \
+        -xzf golang.tar.gz \
+    && rm \
+        golang.tar.gz \
+    && export \
+        PATH="${PATH}":/usr/local/go/bin:/usr/app/go/bin \
+    && mkdir -p \
+        "${GOPATH}" \
+    && git config \
+        --global \
+        --add safe.directory '*' \
+    && git clone \
+        --branch "${GIT_BRANCH}" "${GIT_REPOSITORY}" . \
+    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /usr/app/go/bin/frps-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/app/frp/cmd/frps \
+    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /usr/app/go/bin/frpc-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/app/frp/cmd/frpc \
     && apk del --rdepends \
         build-deps \
-    && rm -rf /app/go/cache /tmp /usr/local/go /usr/app/go/frp
+    && rm -rf \
+        /tmp \
+        /app/go/cache \
+        /usr/local/go \
+        /usr/app/go/frp
 
-# ==================================================== #
-# Runner
-# ==================================================== #
 FROM --platform=$TARGETPLATFORM docker.io/mrrubberducky/qor-gosu:alpine AS gosu-binary
 FROM alpine-base AS alpine-runner
 
