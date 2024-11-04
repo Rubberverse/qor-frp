@@ -2,7 +2,7 @@
 
 ![frp version](https://img.shields.io/badge/frp_version-v0.61.0-darkblue)
 
-📦 **Currently supported tags**: `v0.61.0-frpc`, `v0.61.0-frps`, `v0.61.0-frpc-unpriv`, `v0.61.0-frps-unpriv`, `latest-frpc`, `latest-frps` `latest-frpc-unpriv`, `latest-frps-unpriv`.
+📦 **Currently supported tags**: `latest-frps`, `latest-frpc`, `v0.61.0-frps`, `v0.61.0-frpc`
 
 ♻️ **Update Policy**: On every new frp relese. Not building against `master` branch. Rolling release, only latest versions will be supported.
 
@@ -12,16 +12,12 @@
 
 | 🐳 Image(s) | 📁 Tag(s) | 📓 Description | 💻 Architecture |
 |----------|--------|-------------|---------------|
-| `docker.io/mrrubberducky/qor-frp:latest-frpc-unpriv` | `latest-frpc-unpriv`, `frpc-$VERSION-unpriv` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
-| `docker.io/mrrubberducky/qor-frp:latest-frps-unpriv` | `latest-frps-unpriv`, `frps-$VERSION-unpriv` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
-| `docker.io/mrrubberducky/qor-frp:latest-frpc` | `latest-frpc`, `frpc-$VERSION` | Runs initially as root then forks off to `frp_uclient` user after fixing volume permissions and installing the certificate into container's root trust store. Makes use of `tianon/gosu` | x86_64 |
-| `docker.io/mrrubberducky/qor-frp:latest-frps` | `latest-frps`, `frps-$VERSION` | Runs initially as root then forks off to `frp_uclient` user after fixing volume permissions and installing the certificate into container's root trust store. Makes use of `tianon/gosu` | x86_64 |
+| `docker.io/mrrubberducky/qor-frp:latest-frpc` | `latest-frpc`, `frpc-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
+| `docker.io/mrrubberducky/qor-frp:latest-frps` | `latest-frps`, `frps-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
 
-❓ `$VERSION`: Replace with latest fast reverse proxy version ex. `frps-v0.61.0-unpriv`
+❓ `$VERSION`: Replace with latest fast reverse proxy version ex. `frps-v0.61.0`
 
-💁 Privileged images make use of [Rubberverse/qor-gosu](https://github.com/Rubberverse/qor-gosu), which is `tianon/gosu` compiled with latest Go version and against `master` branch. Done that way so security engines don't have an heart attack.
-
-Rootfull images were made more as a practice, they won't be supported. Only rootless images will be updated from now on.
+Rootfull images were made more as a practice, they won't be supported. Only rootless images will be updated and pushed from now on.
 
 ## Environmental Variables
 
