@@ -33,6 +33,6 @@ Rootfull images were made more as a practice, they won't be supported. Only root
 This container supports no interactive commands. You can however enable frpc or frps API and steer it that way.
 
 1. Mount a configuration file for your frp variant to `/app/configs/`
-2. If you're making use of certificates, mount them using secrets or however you're used to doing. [Example Quadlet Deployment](https://github.com/MrRubberDucky/rubberverse.xyz/blob/main/Quadlet/frpc/QOR-FRPC.container)
+2. If you're making use of certificates, mount them using secrets or however you're used to doing. [Example Quadlet Deployment](https://github.com/MrRubberDucky/rubberverse.xyz/blob/main/Quadlet/frpc/QOR-FRPC.container) - Yes, please ensure that the files are executable by the container user and that the permissions match...
 3. Run the image
 4. Profit
