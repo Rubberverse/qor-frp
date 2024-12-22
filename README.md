@@ -25,6 +25,7 @@ Rootfull images were made more as a practice, they won't be supported. Only root
 |-----|-------------|---------|
 | ❗ `CONFIG_PATH` | Points to frp where the configuration is located inside of the container. Depending on version, it will either point to `frps.toml` or `frpc.toml` | `/app/configs/frpc.toml` |
 | `EXTRA_ARGUMENTS` | Allows to specify extra launch parameters to frp server or client | `empty by default` |
+| `TZ` | Set timezone of the container, for clearer logging. | `Europe/Warsaw` |
 
 ❗ - Required
 
