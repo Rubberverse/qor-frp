@@ -23,6 +23,7 @@ RUN apk upgrade --no-cache \
     && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
         ca-certificates \
         openssl \
+        tzdata \
     && update-ca-certificates \
     && adduser \
         --home "/app" \
@@ -92,6 +93,7 @@ ARG CLIENT_VARIANT
 ARG FRP_TYPE
 ARG GOSU
 ARG TARGETARCH
+ENV TZ="Europe/Warsaw"
 
 ENV GOSU=$GOSU \
     FRP_TYPE=$FRP_TYPE \
