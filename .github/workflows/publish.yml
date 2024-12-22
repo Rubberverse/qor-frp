@@ -37,10 +37,10 @@ jobs:
           image: mrrubberducky/qor-frp
           registry: docker.io
           dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
-          buildArgs: GOSU=0,CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
+          buildArgs: GOSU=0,CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.1,GOPATH=/usr/app/go
           multiPlatform: true
           enableBuildKit: true
-          tags: frps-v0.61.0, latest-frps
+          tags: frps-v0.61.1, latest-frps
           platform: linux/amd64
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -50,10 +50,10 @@ jobs:
           image: mrrubberducky/qor-frp
           registry: docker.io
           dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
-          buildArgs: GOSU=0,CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.0,GOPATH=/usr/app/go
+          buildArgs: GOSU=0,CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.1,GOPATH=/usr/app/go
           multiPlatform: true
           enableBuildKit: true
-          tags: frpc-v0.61.0, latest-frpc
+          tags: frpc-v0.61.1, latest-frpc
           platform: linux/amd64
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
