@@ -1,8 +1,8 @@
 ## 🦆 Rubberverse Container Images
 
-![frp version](https://img.shields.io/badge/frp_version-v0.61.0-darkblue)
+![frp version](https://img.shields.io/badge/frp_version-v0.61.1-darkblue)
 
-📦 **Currently supported tags**: `latest-frps`, `latest-frpc`, `v0.61.0-frps`, `v0.61.0-frpc`
+📦 **Currently supported tags**: `latest-frps`, `latest-frpc`, `v0.61.1-frps`, `v0.61.1-frpc`
 
 ♻️ **Update Policy**: On every new frp relese. Not building against `master` branch. Rolling release, only latest versions will be supported.
 
@@ -12,10 +12,10 @@
 
 | 🐳 Image(s) | 📁 Tag(s) | 📓 Description | 💻 Architecture |
 |----------|--------|-------------|---------------|
-| `docker.io/mrrubberducky/qor-frp:latest-frpc` | `latest-frpc`, `frpc-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
-| `docker.io/mrrubberducky/qor-frp:latest-frps` | `latest-frps`, `frps-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
+| `ghcr.io/rubberverse/qor-frp:latest-frpc` | `latest-frpc`, `frpc-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
+| `ghcr.io/rubberverse/qor-frp:latest-frps` | `latest-frps`, `frps-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
 
-❓ `$VERSION`: Replace with latest fast reverse proxy version ex. `frps-v0.61.0`
+❓ `$VERSION`: Replace with latest fast reverse proxy version ex. `frps-v0.61.1`
 
 Rootfull images were made more as a practice, they won't be supported. Only rootless images will be updated and pushed from now on.
 
