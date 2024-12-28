@@ -1,4 +1,4 @@
-name: Build the image using cc
+name: Build the image using cc and push to GHCR
 
 on:
   push:
@@ -34,29 +34,29 @@ jobs:
       - name: Build & Push Alpine frps rootless Image to DH
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
-          image: mrrubberducky/qor-frp
-          registry: docker.io
+          image: qor-frp
+          registry: ghcr.io
           dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
           buildArgs: GOSU=0,CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.1,GOPATH=/usr/app/go
           multiPlatform: true
           enableBuildKit: true
           tags: frps-v0.61.1, latest-frps
           platform: linux/amd64
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
       - name: Build & Push Alpine frpc rootless Image to DH
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
-          image: mrrubberducky/qor-frp
-          registry: docker.io
+          image: qor-frp
+          registry: ghcr.io
           dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
           buildArgs: GOSU=0,CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.1,GOPATH=/usr/app/go
           multiPlatform: true
           enableBuildKit: true
           tags: frpc-v0.61.1, latest-frpc
           platform: linux/amd64
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
       - name: Cancel on failure
         uses: andymckay/cancel-action@0.4
         if: failure()
