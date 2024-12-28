@@ -86,6 +86,7 @@ RUN apk upgrade --no-cache \
         /usr/app/go/frp
 
 FROM alpine-base AS alpine-runner
+LABEL org.opencontainers.image.source https://github.com/Rubberverse/qor-frp
 
 WORKDIR /app
 
