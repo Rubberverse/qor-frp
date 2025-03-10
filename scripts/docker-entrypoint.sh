@@ -17,11 +17,6 @@ else
     exit 1
 fi
 
-if [ -w "$CONFIG_PATH" ]; then
-    printf "%b" "[⚠️ " "$darkorange" "entrypoint - Warning" "$cend" "] Your configuration file is writeable by the container!\n"
-    printf "%b" "[⚠️ " "$darkorange" "entrypoint - Warning" "$cend" "] It is recommended to mount it as read-only instead, unless you have a good reason for it!\n"
-fi
-
 printf "%b" "$darkorange" " ______        _     _                                             \n(_____ \      | |   | |                                            \n _____) )_   _| |__ | |__  _____  ____ _   _ _____  ____ ___ _____ \n|  __  /| | | |  _ \|  _ \| ___ |/ ___) | | | ___ |/ ___)___) ___ |\n| |  \ \| |_| | |_) ) |_) ) ____| |    \ V /| ____| |  |___ | ____|\n|_|   |_|____/|____/|____/|_____)_|     \_/ |_____)_|  (___/|_____)\n" "$cend";
 printf "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n"
 printf "%b" "🗒️ " "$blue" "Setup Guide " "$cend" "- https://github.com/rubberverse/qor-frp/README.md \n"
