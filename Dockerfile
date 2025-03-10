@@ -78,8 +78,9 @@ RUN apk update \
         ${CONT_USER} \
     && adduser \
         --home "/app" \
-        --shell "/bin/sh" \
+        --shell "/bin/false" \
         --uid ${CONT_UID}  \
+        --ingroup ${CONT_USER} \
         --disabled-password \
         --no-create-home \
         ${CONT_USER} \
