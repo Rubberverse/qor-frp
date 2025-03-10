@@ -53,7 +53,6 @@ RUN apk upgrade --no-cache \
         jq \
         git \
         tar \
-        bash \
         curl \
     && apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
         ca-certificates \
