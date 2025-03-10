@@ -1,9 +1,7 @@
-name: Build the image using cc and push to GHCR
+name: Build the Alpine image and push to GHCR
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*'
     paths-ignore:
