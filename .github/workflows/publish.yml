@@ -34,9 +34,9 @@ jobs:
         with:
           image: qor-frp
           registry: ghcr.io
-          dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
-          buildArgs: GOSU=0,CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.2,GOPATH=/usr/app/go
-          multiPlatform: true
+          dockerfile: Dockerfile
+          buildArgs: CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.2,GOPATH=/usr/app/go
+          multiPlatform: false
           enableBuildKit: true
           tags: frps-v0.61.2, latest-frps
           platform: linux/amd64
@@ -47,9 +47,9 @@ jobs:
         with:
           image: qor-frp
           registry: ghcr.io
-          dockerfile: qor-frp-CC/alpine/rootless.Dockerfile
-          buildArgs: GOSU=0,CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.2,GOPATH=/usr/app/go
-          multiPlatform: true
+          dockerfile: Dockerfile
+          buildArgs: CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.2,GOPATH=/usr/app/go
+          multiPlatform: false
           enableBuildKit: true
           tags: frpc-v0.61.2, latest-frpc
           platform: linux/amd64
