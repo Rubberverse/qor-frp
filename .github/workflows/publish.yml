@@ -14,47 +14,42 @@ jobs:
     name: Build and push to ghcr
     runs-on: ubuntu-latest
     environment: production
+    permissions:
+      contents: read
+      actions: write
     defaults:
       run:
         working-directory: .
         shell: bash
     steps:
-      - name: Free up worker space
-        run: sudo rm -rf "$AGENT_TOOLSDIRECTORY"; sudo rm -rf /usr/share/dotnet /usr/local/lib/android; sudo apt-get update; sudo apt-get remove -y '^dotnet-.*'; sudo apt-get autoremove -y; sudo apt-get clean
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Build and push frps version tag
+        uses: Frozen-Tapestry/container-action@v1
         with:
-          fetch-depth: '0'
-      - name: QEMU
-        uses: docker/setup-qemu-action@v3.2.0
-        with:
-          platforms: arm64
-      - name: Build & Push Alpine frps rootless Image to DH
-        uses: mr-smithers-excellent/docker-build-push@v6
-        with:
-          image: qor-frp
-          registry: ghcr.io
+          login_registry: ghcr.io
+          login_username: ${{ github.actor }}
+          login_password: ${{ secrets.GHCR_TOKEN }}
+          tags: ghcr.io/rubberverse/qor-frp:frps-v0.62.1
           dockerfile: Dockerfile
-          buildArgs: CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.61.2,GOPATH=/usr/app/go
-          multiPlatform: false
-          enableBuildKit: true
-          tags: frps-v0.61.2, latest-frps
-          platform: linux/amd64
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
-      - name: Build & Push Alpine frpc rootless Image to DH
-        uses: mr-smithers-excellent/docker-build-push@v6
+          build_args: CLIENT_VARIANT=frps,FRP_TYPE=SERVER,GIT_BRANCH=v0.62.1
+          extra_args: --annotation org.opencontainers.image.authors=Mr.\ Rubber\ Ducky\ (OG_MrRubberDucky)<overseer@rubberverse.xyz> --annotation org.opencontainers.image.url=https://rubberverse.xyz --annotation org.opencontainers.image.source=https://github.com/Rubberverse/qor-frp --annotation org.opencontainers.image.revision=v0.62.1 --annotation org.opencontainers.image.licenses=MIT --annotation org.opencontainers.image.vendor=Rubberverse --annotation org.opencontainers.image.title=Quackers\ of\ Rubberverse\ (QoR)\ frp --annotation org.opencontainers.image.description=Rootless\ frp\ server\ image
+          security: |
+            --security-opt=seccomp=unconfined
+            --security-opt=apparmor=unconfined
+          push: true
+
+      - name: Build and push frpc version tag
+        uses: Frozen-Tapestry/container-action@v1
         with:
-          image: qor-frp
-          registry: ghcr.io
+          login_registry: ghcr.io
+          login_username: ${{ github.actor }}
+          login_password: ${{ secrets.GHCR_TOKEN }}
+          tags: ghcr.io/rubberverse/qor-frp:frpc-v0.62.1
           dockerfile: Dockerfile
-          buildArgs: CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.61.2,GOPATH=/usr/app/go
-          multiPlatform: false
-          enableBuildKit: true
-          tags: frpc-v0.61.2, latest-frpc
-          platform: linux/amd64
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
-      - name: Cancel on failure
-        uses: andymckay/cancel-action@0.4
-        if: failure()
+          build_args: CLIENT_VARIANT=frpc,FRP_TYPE=CLIENT,GIT_BRANCH=v0.62.1
+          extra_args: --annotation org.opencontainers.image.authors=Mr.\ Rubber\ Ducky\ (OG_MrRubberDucky)<overseer@rubberverse.xyz> --annotation org.opencontainers.image.url=https://rubberverse.xyz --annotation org.opencontainers.image.source=https://github.com/Rubberverse/qor-frp --annotation org.opencontainers.image.revision=v0.62.1 --annotation org.opencontainers.image.licenses=MIT --annotation org.opencontainers.image.vendor=Rubberverse --annotation org.opencontainers.image.title=Quackers\ of\ Rubberverse\ (QoR)\ frp --annotation org.opencontainers.image.description=Rootless\ frp\ client\ image
+          security: |
+            --security-opt=seccomp=unconfined
+            --security-opt=apparmor=unconfined
+          push: true
