@@ -1,4 +1,4 @@
-ARG     IMAGE_REPOSITORY=docker.io/library
+ARG     IMAGE_REPOSITORY=public.ecr.aws/docker/library/alpine
 ARG     IMAGE_ALPINE_VERSION=edge
 
 FROM    $IMAGE_REPOSITORY:$IMAGE_ALPINE_VERSION AS alpine-builder
