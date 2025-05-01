@@ -39,12 +39,9 @@ RUN apk update \
 
 FROM    scratch AS frp-runner
 
-ARG     FRP_TYPE
 ARG     TARGETARCH
-ENV     CLIENT_VARIANT=$CLIENT_VARIANT \
-        FRP_TYPE=$FRP_TYPE
 
-COPY    --from=alpine-builder --chmod=0505 /app/bin/${CLIENT_VARIANT}-${TARGETARCH} /app/bin/frps
+COPY    --from=alpine-builder --chmod=0505 /app/bin/frps-${TARGETARCH} /app/bin/frps
 
 WORKDIR /app
 USER    1001:1001
