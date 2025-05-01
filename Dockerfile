@@ -14,6 +14,8 @@ ARG     GOCACHE=/app/go/cache
 ARG     CGO_ENABLED=0
 ENV     PATH="/usr/local/go/bin:/usr/app/go/bin:${PATH}"
 
+COPY --chmod=0505 /scripts/install-go.sh /app/helper/install-go.sh
+
 WORKDIR /usr/src/frp
 
 RUN apk update \
