@@ -27,7 +27,6 @@ RUN apk update \
         curl \
     && /app/helper/install-go.sh \
     && git clone --branch "${GIT_BRANCH}" "${GIT_REPOSITORY}" . \
-    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/frps-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/src/frp/cmd/frps \
     && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/frpc-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/src/frp/cmd/frpc \
     && apk del --rdepends \
         build-deps \
@@ -40,15 +39,11 @@ RUN apk update \
 
 FROM    scratch AS frp-runner
 
-ARG     CLIENT_VARIANT
-ARG     FRP_TYPE
 ARG     TARGETARCH
-ENV     CLIENT_VARIANT=$CLIENT_VARIANT \
-        FRP_TYPE=$FRP_TYPE
 
-COPY    --from=alpine-builder /app/bin/${CLIENT_VARIANT}-${TARGETARCH} /app/bin/${CLIENT_VARIANT}
+COPY    --from=alpine-builder /app/bin/frpc-${TARGETARCH} /app/bin/frpc
 
 WORKDIR /app
 USER    1001:1001
 
-ENTRYPOINT ["/app/bin/${CLIENT_VARIANT}"]
+ENTRYPOINT ["/app/bin/frpc"]
