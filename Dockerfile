@@ -27,8 +27,8 @@ RUN apk update \
         curl \
     && /app/helper/install-go.sh \
     && git clone --branch "${GIT_BRANCH}" "${GIT_REPOSITORY}" . \
-    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/frps-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/app/frp/cmd/frps \
-    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/frpc-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/app/frp/cmd/frpc \
+    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/frps-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/src/frp/cmd/frps \
+    && GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/frpc-${TARGETARCH} -trimpath -ldflags '-w -s' /usr/src/frp/cmd/frpc \
     && apk del --rdepends \
         build-deps \
     && rm -rf \
