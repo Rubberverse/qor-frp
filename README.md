@@ -1,34 +1,28 @@
 ## 🦆 Rubberverse Container Images
 
-![Image Tag](https://img.shields.io/github/v/tag/Rubberverse/qor-frp) ![Frp Version](https://img.shields.io/badge/frp-v0.61.2-brown) ![License](https://img.shields.io/github/license/Rubberverse/qor-frp)
+![Image Tag](https://img.shields.io/github/v/tag/Rubberverse/qor-frp) ![License](https://img.shields.io/github/license/Rubberverse/qor-frp)
 
-📦 **Currently supported tags**: `latest-frps`, `latest-frpc`, `frps-latest_tag_from_above`, `frpc-latst_tag_from_above`
+This is a very simple Dockerfile that builds frp using `go build` and then just moves it into a `scratch` image. No shells, no fancy thingamajigas, just a singular binary inside the final image and that's it.
 
-♻️ **Update Policy**: On every new frp relese. Not building against `master` branch. Rolling release, only latest versions will be supported.
+## Features
 
-🛡️ **Update Policy**: Every 14 days.
+- Uses scratch image for runner, meaning there's no shell or any extra utilities
+- Rootless, supports any UID:GID combination as long as you fix up the directory and file permissions
+- Low file-size, frps image only weights 20.5MB while frpc one, 16.2MB
+- Ready for cross-compilation, no hard dependencies
+- Only read and execute permissions on main binaries
 
-### Version Tag information
+### Image Tags
 
-| 🐳 Image(s) | 📁 Tag(s) | 📓 Description | 💻 Architecture |
-|----------|--------|-------------|---------------|
-| `ghcr.io/rubberverse/qor-frp:latest-frpc` | `latest-frpc`, `frpc-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
-| `ghcr.io/rubberverse/qor-frp:latest-frps` | `latest-frps`, `frps-$VERSION` | Runs as `frp_uclient` user, no extra privileges or fancy switching systems are used. | x86_64 |
-
-❓ `$VERSION`: Replace with latest fast reverse proxy version ex. `frps-v0.61.1`
-
-Rootfull images were made more as a practice, they won't be supported. Only rootless images will be updated and pushed from now on.
-
-### Environmental Variables
-
-| Env | Description | Value |
-|-----|-------------|---------|
-| ❗ `CONFIG_PATH` | Points to frp where the configuration is located inside of the container. Depending on version, it will either point to `frps.toml` or `frpc.toml` | `/app/configs/frpc.toml` |
-| `EXTRA_ARGUMENTS` | Allows to specify extra launch parameters to frp server or client | `empty by default` |
-| `TZ` | Set timezone of the container, for clearer logging. | `Europe/Warsaw` |
-
-❗ - Required
+| Image                                   | Description                      | Arch   |
+|-----------------------------------------|----------------------------------|--------|
+| `ghcr.io/rubberverse/qor-frp:frpc-$tag` | Runs the client component of frp | x86_64 |
+| `ghcr.io/rubberverse/qor-frp:frps-$tag` | Runs the server component of frp | x86_64 |
 
 ### Usage
 
-This container supports no interactive commands. You can however enable frpc or frps API and steer it that way.
+1. Mount a configuration file to `/app/configs/frpc.toml`, replace with `frps.toml` if using the server variant.
+2. Add an extra launch parameter: `--config /app/configs/frpc.toml`, replace with `frps.toml` if using the server variant. ex. `Exec=--config /app/configs/frpc.toml`
+3. Run the container
+
+That's all.
