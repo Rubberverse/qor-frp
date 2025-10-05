@@ -30,7 +30,7 @@ jobs:
           login_registry: ghcr.io
           login_username: ${{ github.actor }}
           login_password: ${{ secrets.GHCR_TOKEN }}
-          tags: ghcr.io/rubberverse/qor-frp:frps
+          tags: ghcr.io/rubberverse/qor-frp:frps-test
           dockerfile: Server.Dockerfile
           build_args: GIT_BRANCH=new
           extra_args: --annotation org.opencontainers.image.authors=Mr.\ Rubber\ Ducky\ (OG_MrRubberDucky)<overseer@rubberverse.xyz> --annotation org.opencontainers.image.url=https://rubberverse.xyz --annotation org.opencontainers.image.source=https://github.com/Rubberverse/qor-frp --annotation org.opencontainers.image.revision=v0.62.1 --annotation org.opencontainers.image.licenses=MIT --annotation org.opencontainers.image.vendor=Rubberverse --annotation org.opencontainers.image.title=Quackers\ of\ Rubberverse\ (QoR)\ frp --annotation org.opencontainers.image.description=Rootless\ frp\ server\ image
@@ -45,7 +45,7 @@ jobs:
           login_registry: ghcr.io
           login_username: ${{ github.actor }}
           login_password: ${{ secrets.GHCR_TOKEN }}
-          tags: ghcr.io/rubberverse/qor-frp:frpc
+          tags: ghcr.io/rubberverse/qor-frp:frpc-test
           dockerfile: Client.Dockerfile
           build_args: GIT_BRANCH=new
           extra_args: --annotation org.opencontainers.image.authors=Mr.\ Rubber\ Ducky\ (OG_MrRubberDucky)<overseer@rubberverse.xyz> --annotation org.opencontainers.image.url=https://rubberverse.xyz --annotation org.opencontainers.image.source=https://github.com/Rubberverse/qor-frp --annotation org.opencontainers.image.revision=v0.62.1 --annotation org.opencontainers.image.licenses=MIT --annotation org.opencontainers.image.vendor=Rubberverse --annotation org.opencontainers.image.title=Quackers\ of\ Rubberverse\ (QoR)\ frp --annotation org.opencontainers.image.description=Rootless\ frp\ client\ image
